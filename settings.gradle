@@ -1,0 +1,3 @@
+include ':chartLib'
+include ':app'
+rootProject.name = "ChartView"
