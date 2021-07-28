@@ -18,7 +18,7 @@ class DailyChartView @JvmOverloads constructor(
     private var calendar: Calendar = Calendar.getInstance()
     private var startTime = calendar.getTimeInMillisFirstDay()
     private var endTime = calendar.getTimeInMillisLastDay()
-    private val items = mutableListOf<Pair<Pair<Long, Long>, Int>>()
+    private val points = mutableListOf<PointData>()
     private val mWidthOffset by lazy {
         mMaxWidth / (60 * 24f)
     }
@@ -34,31 +34,30 @@ class DailyChartView @JvmOverloads constructor(
                 "24:00" to 24
         )
 
-    fun setTime(time: List<Pair<Pair<Long, Long>, Int>>) {
-        this.items.clear()
-        this.items.addAll(time)
+    fun setData(newPoints: List<PointData>) {
+        this.points.clear()
+        this.points.addAll(newPoints)
         postInvalidate()
     }
 
     override fun onDrawVertical(canvas: Canvas) {
-        this.items.map {
-            val time = it.first
-            val startTime = time.first
-            val endTime = time.second
+        this.points.map { point ->
+            val startTime = point.startTime
+            val endTime = point.endTime
 
             val width = ((endTime - startTime) / 60000) * mWidthOffset
             val paint = Paint().apply {
                 color = Color.parseColor("#FF8040")
             }
-            val startX = calculatorStartX(it.first)
-            val startY = calculatorStartY(it.second) + dp2px(TOTAL_MARGIN_TOP)
+            val startX = calculatorStartX(point)
+            val startY = calculatorStartY(point) + dp2px(TOTAL_MARGIN_TOP)
             val rectF = RectF(startX, startY,
                     startX + width - dp2px(2f),
                     mQuadrant.quadrantPaddingEndY + dp2px(LINE_MARGIN_TOP))
 
             val dpRadius = dp2px(16f).toFloat()
             canvas.drawRoundRect(rectF, dpRadius, dpRadius, paint)
-            canvas.drawText(it.second.toString(), startX + (width / 2), startY - dp2px(5f), Paint().apply {
+            canvas.drawText(point.value.toString(), startX + (width / 2), startY - dp2px(5f), Paint().apply {
                 color = Color.BLACK
                 textSize = dp2px(10f).toFloat()
                 textAlign = Paint.Align.CENTER
@@ -73,14 +72,13 @@ class DailyChartView @JvmOverloads constructor(
 
     private fun Long.toDate() = SimpleDateFormat("hh:mm").format(this).toString()
 
-    private fun calculatorStartY(itemValue: Int) : Float {
+    private fun calculatorStartY(point: PointData) : Float {
         Log.d("checkResultMaxHeight", "MH: $mMaxHeight")
-        return mHeightOffset * ((mMaxPlace - itemValue))
+        return mHeightOffset * ((mMaxPlace - point.value))
     }
 
-    private fun calculatorStartX(time: Pair<Long, Long>) : Float {
-        val startTime = time.first
-        val mStart = this.endTime - startTime
+    private fun calculatorStartX(point: PointData) : Float {
+        val mStart = this.endTime - point.startTime
         val wStart = (60 * 24 - (mStart / 60000)) * mWidthOffset
 
         return startXItem + wStart + dp2px(1f)

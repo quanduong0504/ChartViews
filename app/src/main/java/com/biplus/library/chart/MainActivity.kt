@@ -2,6 +2,7 @@ package com.biplus.library.chart
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.biplus.library.chartlib.PointData
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
 
@@ -21,12 +22,12 @@ class MainActivity : AppCompatActivity() {
         end.set(Calendar.HOUR_OF_DAY, 12)
         end.set(Calendar.MINUTE, 30)
 
-        weekView.setTime(listOf(
-                (start.timeInMillis to end.timeInMillis) to 80,
-                (getTime(now.copyCal(), 6) to getTime(now.copyCal(), 7)) to 120,
-                (getTime(now.copyCal(), 3) to getTime(now.copyCal(), 4)) to 200,
-                (getTime(now.copyCal(), 5) to getTime(now.copyCal(), 6)) to 100,
-                (getTime(now.copyCal(), 2) to getTime(now.copyCal(), 3)) to 60
+        weekView.setData(listOf(
+            PointData(start.timeInMillis, end.timeInMillis, 80),
+            PointData(getTime(now.copyCal(), 6), getTime(now.copyCal(), 7), 120),
+            PointData(getTime(now.copyCal(), 3), getTime(now.copyCal(), 4), 200),
+            PointData(getTime(now.copyCal(), 5), getTime(now.copyCal(), 6), 100),
+            PointData(getTime(now.copyCal(), 2), getTime(now.copyCal(), 3), 60),
         ))
     }
 

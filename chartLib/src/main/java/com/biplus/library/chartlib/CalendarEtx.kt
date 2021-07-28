@@ -91,11 +91,11 @@ private fun Calendar.addField(field: Int, value: Int) : Calendar {
     this.add(field, value)
     return this
 }
-internal fun Calendar.setField(field: Int, value: Int) : Calendar {
+fun Calendar.setField(field: Int, value: Int) : Calendar {
     this.set(field, value)
     return this
 }
-internal fun Calendar.copyCal() : Calendar {
+fun Calendar.copyCal() : Calendar {
     val cal = clone() as Calendar
     cal.clear(Calendar.MINUTE)
     cal.clear(Calendar.SECOND)
